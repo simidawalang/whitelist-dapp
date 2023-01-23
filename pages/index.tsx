@@ -53,6 +53,44 @@ export default function Home() {
     }
   };
 
+  const checkIfWhitelisted = async () => {
+    try {
+      const provider = await getSignerOrProvider();
+      const accounts = await provider.send("eth_requestAccounts", []);
+
+      const whitelisContract = new Contract(
+        WHITELIST_CONTRACT_ADDRESS,
+        ABI,
+        provider
+      );
+
+      const _isWhitelisted = await whitelisContract.whitelistedAddresses(
+        accounts[0]
+      );
+      setIsWhitelisted(_isWhitelisted)
+    } catch (e) {
+      console.debug(e);
+    }
+  };
+
+  const addAddressToWhitelist = async () => {
+    try {
+      const signer = await getSignerOrProvider(true);
+
+      const whitelisContract = new Contract(
+        WHITELIST_CONTRACT_ADDRESS,
+        ABI,
+        signer
+      );
+
+      const tx = await whitelisContract.addAddressToWhitelist();
+      await tx.wait();
+      setIsWhitelisted(true);
+    } catch (e) {
+      console.debug(e);
+    }
+  };
+
   const checkIfConnected = async () => {
     try {
       const provider = await getSignerOrProvider();
@@ -71,10 +109,6 @@ export default function Home() {
       const accounts = await provider.listAccounts();
       setCurrentAccount(accounts[0]);
       setIsConnected(true);
-      // setIsConnected(true);
-
-      // checkIfWhitelisted();
-      // getNumWhitelistedAddresses();
     } catch (err) {
       console.error(err);
     }
@@ -82,6 +116,7 @@ export default function Home() {
 
   useEffect(() => {
     checkIfConnected();
+    checkIfWhitelisted();
   }, [currentAccount]);
 
   useEffect(() => {
@@ -103,7 +138,10 @@ export default function Home() {
 
       <main>
         {currentAccount && (
-          <div className="current-account"> {`${currentAccount.slice(0,5)}...${currentAccount.slice(35)}`}</div>
+          <div className="current-account">
+            {" "}
+            {`${currentAccount.slice(0, 5)}...${currentAccount.slice(35)}`}
+          </div>
         )}
         <div className="main">
           <div className="intro-block">
@@ -113,11 +151,21 @@ export default function Home() {
               <span className="highlighted-text">cowries</span> in modern{" "}
               <span className="highlighted-text">blockchain</span>
             </p>
-            {!isConnected && <Button
-              className="btn-glow"
-              content="Connect Wallet"
-              onClick={connectWallet}
-            />}
+            {!isConnected && (
+              <Button
+                className="btn-glow"
+                content="Connect Wallet"
+                onClick={connectWallet}
+              />
+            )}
+            {!isWhitelisted && (
+              <Button
+                className="btn-glow"
+                content="Join Whitelist"
+                onClick={addAddressToWhitelist}
+              />
+            )}
+            {isConnected && isWhitelisted && <p>Congrats, you have been whitelisted!</p>}
           </div>
           <div>
             <Image
