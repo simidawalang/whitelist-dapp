@@ -129,7 +129,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Cowry Coin Whitelist</title>
+        <title>Orisa NFT Whitelist</title>
         <meta name="description" content="Orisa NFT Whitelist" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -144,8 +144,8 @@ export default function Home() {
           <div className="intro-block">
             <h1 className="title">Orisa</h1>
             <p className="description">
-              For fans of {" "}
-              <span className="highlighted-text">Yoruba</span> mythology
+              For fans of <span className="highlighted-text">Yoruba</span>{" "}
+              mythology
             </p>
             {!isConnected && (
               <Button
