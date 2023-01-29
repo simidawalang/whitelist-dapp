@@ -49,16 +49,14 @@ main {
   color: $blue;
 }
 
-.cowry-image {
-  max-width: 300px;
-   max-height: 300px;
+.orisa-img {
+  max-height: 300px;
   object-fit: contain;
+  border-radius: 10px;
   @media #{ $medium} {
-    max-width: 500px;
-     max-height: 500px;
+    max-height: 600px;
   }
 }
-
 .current-account {
   padding: 8px 10px;
   border-radius: 0.25em;

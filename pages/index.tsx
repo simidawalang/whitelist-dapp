@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, use } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Web3Modal from "web3modal";
@@ -8,8 +8,6 @@ import coinImg from "@/assets/coins-3D.png";
 import { ABI, WHITELIST_CONTRACT_ADDRESS } from "@/constants";
 
 export default function Home() {
-  const web3ModalRef = useRef();
-
   const [currentAccount, setCurrentAccount] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [isWhitelisted, setIsWhitelisted] = useState(false);
@@ -47,6 +45,7 @@ export default function Home() {
 
     if (accounts.length > 0) {
       setCurrentAccount(accounts[0]);
+      await checkIfWhitelisted();
     } else {
       setCurrentAccount("");
       setIsConnected(false);
@@ -67,7 +66,7 @@ export default function Home() {
       const _isWhitelisted = await whitelisContract.whitelistedAddresses(
         accounts[0]
       );
-      setIsWhitelisted(_isWhitelisted)
+      setIsWhitelisted(_isWhitelisted);
     } catch (e) {
       console.debug(e);
     }
@@ -131,25 +130,22 @@ export default function Home() {
     <>
       <Head>
         <title>Cowry Coin Whitelist</title>
-        <meta name="description" content="Cowry coin" />
+        <meta name="description" content="Orisa NFT Whitelist" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/coins-3D.png" />
       </Head>
 
       <main>
         {currentAccount && (
           <div className="current-account">
-            {" "}
             {`${currentAccount.slice(0, 5)}...${currentAccount.slice(35)}`}
           </div>
         )}
         <div className="main">
           <div className="intro-block">
-            <h1 className="title">Cowry Coin</h1>
+            <h1 className="title">Orisa</h1>
             <p className="description">
-              Old meets new... Traditional{" "}
-              <span className="highlighted-text">cowries</span> in modern{" "}
-              <span className="highlighted-text">blockchain</span>
+              For fans of {" "}
+              <span className="highlighted-text">Yoruba</span> mythology
             </p>
             {!isConnected && (
               <Button
@@ -165,14 +161,18 @@ export default function Home() {
                 onClick={addAddressToWhitelist}
               />
             )}
-            {isConnected && isWhitelisted && <p>Congrats, you have been whitelisted!</p>}
+            {isConnected && isWhitelisted && (
+              <p>Congrats, you have been whitelisted!</p>
+            )}
           </div>
           <div>
             <Image
-              className="cowry-image"
-              src={coinImg}
-              alt="Cowry coins"
+              className="orisa-img"
+              src="https://res.cloudinary.com/dtumqh3dd/image/upload/v1674788780/nft-dapp/3_uu5f12.jpg"
+              alt="Osun the river goddess"
               priority
+              width={400}
+              height={600}
             />
           </div>
         </div>
